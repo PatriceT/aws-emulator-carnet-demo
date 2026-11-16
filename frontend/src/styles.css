@@ -1,0 +1,24 @@
+:root { --encre: #1c2430; --doux: #5d6878; --trait: #dfe3ea; --fond: #f5f6f8; --accent: #2456d6; --ok: #1f9d55; --ko: #d64545; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.5 system-ui, sans-serif; color: var(--encre); background: var(--fond); }
+main { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { margin: 0; font-size: 28px; }
+h2 { margin: 0 0 4px; font-size: 18px; }
+.sous-titre, .aide, .date, .detail { color: var(--doux); font-size: 14px; }
+.carte { background: #fff; border: 1px solid var(--trait); border-radius: 10px; padding: 16px; margin-top: 16px; }
+.ligne { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+label { display: block; margin: 10px 0; font-size: 14px; color: var(--doux); }
+input, textarea { display: block; width: 100%; padding: 9px 10px; margin-top: 4px; border: 1px solid var(--trait); border-radius: 6px; font: inherit; }
+button { padding: 9px 14px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: inherit; cursor: pointer; }
+button.discret { padding: 2px 6px; background: none; color: var(--accent); font-size: 14px; }
+.ajout { display: grid; gap: 8px; margin: 12px 0; }
+.erreur { color: var(--ko); font-size: 14px; }
+ul { list-style: none; margin: 0; padding: 0; }
+.notes li { padding: 10px 0; border-top: 1px solid var(--trait); }
+.notes li div { display: flex; justify-content: space-between; gap: 8px; }
+.notes p { margin: 4px 0; }
+.briques li { display: grid; grid-template-columns: 14px 150px 1fr; gap: 8px; align-items: center; padding: 6px 0; border-top: 1px solid var(--trait); }
+.pastille { width: 10px; height: 10px; border-radius: 50%; }
+.pastille.ok { background: var(--ok); }
+.pastille.ko { background: var(--ko); }
+.detail { overflow-wrap: anywhere; }

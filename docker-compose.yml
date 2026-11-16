@@ -1,0 +1,70 @@
+# Toute la démo dans Docker :  docker compose up --build
+#
+# Tous les services partagent le réseau du conteneur « emulateur ». Ils se parlent donc
+# en 127.0.0.1, comme sur un poste de dev : le certificat de l'émulateur reste valide et
+# l'endpoint RDS qu'il annonce (127.0.0.1:<port aléatoire>) est joignable par le backend.
+services:
+  emulateur:
+    build: { context: ., dockerfile: docker/Dockerfile.outils }
+    command: aws-emulator --telemetry off --bind 0.0.0.0
+    volumes:
+      - emulateur:/root/.aws/emulator      # identifiants et certificat générés au démarrage
+    ports:
+      - "127.0.0.1:9297:9297"   # API AWS émulée (utile pour les URL présignées S3)
+      - "127.0.0.1:8000:8000"   # backend
+      - "127.0.0.1:5173:5173"   # front
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS --cacert /root/.aws/emulator/9297/ca.pem https://127.0.0.1:9297/__admin/health"]
+      interval: 2s
+      retries: 30
+
+  redis:   # secours : le Redis émulé par ElastiCache est partiel
+    image: redis:7-alpine
+    network_mode: "service:emulateur"
+
+  test:    # crée l'infra avec la CLI, joue le scénario, écrit rapport.md et backend/.env
+    build: { context: ., dockerfile: docker/Dockerfile.outils }
+    network_mode: "service:emulateur"
+    depends_on:
+      emulateur: { condition: service_healthy }
+    volumes:
+      - .:/app
+      - emulateur:/root/.aws/emulator:ro
+    command: bash scripts/test-emulateur.sh
+
+  terraform:   # à la demande :  docker compose --profile terraform run --rm terraform
+    profiles: ["terraform"]
+    build: { context: ., dockerfile: docker/Dockerfile.outils }
+    network_mode: "service:emulateur"
+    depends_on:
+      emulateur: { condition: service_healthy }
+    volumes:
+      - .:/app
+      - emulateur:/root/.aws/emulator:ro
+    command: bash scripts/test-terraform.sh
+
+  backend:
+    build: { context: ., dockerfile: docker/Dockerfile.backend }
+    network_mode: "service:emulateur"
+    depends_on:
+      test: { condition: service_completed_successfully }
+      redis: { condition: service_started }
+    volumes:
+      - .:/app
+      - emulateur:/root/.aws/emulator:ro
+    command: >
+      bash -c "source scripts/env.sh && set -a && source backend/.env && set +a
+      && cd backend && exec uvicorn main:app --host 0.0.0.0 --port 8000"
+
+  frontend:
+    image: node:22-alpine
+    network_mode: "service:emulateur"
+    depends_on: [backend]
+    working_dir: /app/frontend
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+    command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0"
+
+volumes:
+  emulateur:

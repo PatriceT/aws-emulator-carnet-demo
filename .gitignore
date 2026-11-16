@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+backend/.env
+rapport.md
+rapport-terraform.md
+terraform/.terraform*
+terraform/terraform.tfstate*
+
+# Local leftovers
+carnet-app-1611.png
+*.zip
