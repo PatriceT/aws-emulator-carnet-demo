@@ -4,6 +4,8 @@ A fictional note-taking app ("carnet" is French for notebook) that uses the AWS 
 
 > **This is a snapshot, published as is and not maintained.** The results below are from November 16, 2026, on emulator 1.0.471. The emulator ships several releases a day, so expect different numbers when you run it. That is the point: run it again and compare.
 
+> The results are explained in the article: [AWS Emulator, hands-on: 66 of 72 checks pass, and Terraform still hits a wall](https://dev.to/patricet/aws-emulator-hands-on-66-of-72-checks-pass-and-terraform-still-hits-a-wall-4l58).
+
 > Version française : [README.fr.md](README.fr.md)
 
 ![The Carnet app running against AWS Emulator](docs/carnet-app.png)

@@ -6,6 +6,8 @@ Une petite application de notes, entièrement fictive, qui utilise les briques A
 qu'une équipe de développement manipule tous les jours. Elle sert à mesurer ce que
 [AWS Emulator](https://github.com/aws/aws-emulator) sait faire en local, sans compte AWS.
 
+> Les résultats sont commentés dans l'article (en anglais) : [AWS Emulator, hands-on: 66 of 72 checks pass, and Terraform still hits a wall](https://dev.to/patricet/aws-emulator-hands-on-66-of-72-checks-pass-and-terraform-still-hits-a-wall-4l58).
+
 | Partie | Technologie | Briques AWS |
 | --- | --- | --- |
 | Front | React (Vite) | aucune, il n'appelle que `/api` |
